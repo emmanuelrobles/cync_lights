@@ -1,5 +1,7 @@
 """Config flow for Cync Room Lights integration."""
 from __future__ import annotations
+
+import json
 import logging
 import voluptuous as vol
 from typing import Any
@@ -105,6 +107,7 @@ class CyncConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             _LOGGER.error(str(type(e).__name__) + ": " + str(e))
             errors["base"] = "unknown"
         else:
+            _LOGGER.info(json.dumps(info))
             self.data = info
             return await self.async_step_select_switches()
 
@@ -120,7 +123,8 @@ class CyncConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             self.options = user_input
             return await self._async_finish_setup()
-
+        
+        
         switches_data_schema = vol.Schema(
             {
                 vol.Optional(
